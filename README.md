@@ -1,2 +1,2 @@
-# CS251_Dex_V2_Starter
-Starter Code for Stanford's CS251 DEX Project
+Stanford University, CS251 Project 4: Building a DEX
+Authors: Simon Tao (BS'22, MS'23), Mathew Hogan (BS'22), under the guidance of Professor Dan Boneh.
