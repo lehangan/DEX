@@ -15,7 +15,7 @@ contract TokenExchange is Ownable {
     Token public token = Token(tokenAddr);
 
     address payable rewardAddr =
-        payable(0xa513E6E4b8f2a923D98304ec87F64353C4D5C853);
+        payable(0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512);
     Reward public reward = Reward(payable(rewardAddr));
 
     // Liquidity pool for the exchange

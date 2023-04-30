@@ -245,7 +245,11 @@ export const generateAddress2 = function (from: Buffer, salt: Buffer, initCode: 
  * Checks if the private key satisfies the rules of the curve secp256k1.
  */
 export const isValidPrivate = function (privateKey: Buffer): boolean {
-  return privateKeyVerify(privateKey)
+  try {
+    return privateKeyVerify(privateKey)
+  } catch {
+    return false
+  }
 }
 
 /**
@@ -361,7 +365,9 @@ export function accountBodyToSlim(body: AccountBodyBuffer) {
 }
 
 /**
- * Converts a slim account RLP to a normal account RLP
+ * Converts a slim account (per snap protocol spec) to the RLP encoded version of the account
+ * @param body Array of 4 Buffer-like items to represent the account
+ * @returns RLP encoded version of the account
  */
 export function accountBodyToRLP(body: AccountBodyBuffer, couldBeSlim = true) {
   const accountBody = couldBeSlim ? accountBodyFromSlim(body) : body

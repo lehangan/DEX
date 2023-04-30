@@ -587,7 +587,7 @@ const exchange_abi = [{
   "stateMutability": "nonpayable",
   "type": "function"
 }];
-const exchange_address = '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44';
+const exchange_address = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
 const exchange_contract = new ethers.Contract(exchange_address, exchange_abi, provider.getSigner());
 
 const reward_abi = [{
@@ -674,7 +674,7 @@ const reward_abi = [{
   "type": "receive"
 }
 ];
-const reward_address = '0x0165878A594ca255338adfa4d48449f69242Eb8F';
+const reward_address = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
 const reward_contract = new ethers.Contract(reward_address, reward_abi, provider.getSigner());
 
 

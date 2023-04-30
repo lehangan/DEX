@@ -116,6 +116,7 @@ export class Transaction extends BaseTransaction<Transaction> {
       throw new Error(msg)
     }
     this._validateCannotExceedMaxInteger({ gasPrice: this.gasPrice })
+    BaseTransaction._validateNotArray(txData)
 
     if (this.common.gteHardfork('spuriousDragon')) {
       if (!this.isSigned()) {
@@ -133,7 +134,7 @@ export class Transaction extends BaseTransaction<Transaction> {
       }
     }
 
-    if (this.common.isActivatedEIP(3860)) {
+    if (this.common.isActivatedEIP(3860) && this.txOptions.disableMaxInitCodeSizeCheck !== true) {
       checkMaxInitCodeSize(this.common, this.data.length)
     }
 

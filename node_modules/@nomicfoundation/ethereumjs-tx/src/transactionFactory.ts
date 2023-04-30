@@ -1,7 +1,9 @@
 import { bufferToBigInt, toBuffer } from '@nomicfoundation/ethereumjs-util'
+import { JsonRpcProvider } from '@ethersproject/providers'
 
 import { FeeMarketEIP1559Transaction } from './eip1559Transaction'
 import { AccessListEIP2930Transaction } from './eip2930Transaction'
+import { normalizeTxParams } from './fromRpc'
 import { Transaction } from './legacyTransaction'
 
 import type {
@@ -52,22 +54,13 @@ export class TransactionFactory {
   public static fromSerializedData(data: Buffer, txOptions: TxOptions = {}): TypedTransaction {
     if (data[0] <= 0x7f) {
       // Determine the type.
-      let EIP: number
       switch (data[0]) {
         case 1:
-          EIP = 2930
-          break
+          return AccessListEIP2930Transaction.fromSerializedTx(data, txOptions)
         case 2:
-          EIP = 1559
-          break
+          return FeeMarketEIP1559Transaction.fromSerializedTx(data, txOptions)
         default:
           throw new Error(`TypedTransaction with ID ${data[0]} unknown`)
-      }
-      if (EIP === 1559) {
-        return FeeMarketEIP1559Transaction.fromSerializedTx(data, txOptions)
-      } else {
-        // EIP === 2930
-        return AccessListEIP2930Transaction.fromSerializedTx(data, txOptions)
       }
     } else {
       return Transaction.fromSerializedTx(data, txOptions)
@@ -92,5 +85,23 @@ export class TransactionFactory {
     } else {
       throw new Error('Cannot decode transaction: unknown type input')
     }
+  }
+
+  /**
+   *  Method to retrieve a transaction from the provider
+   * @param provider - An Ethers JsonRPCProvider
+   * @param txHash - Transaction hash
+   * @param txOptions - The transaction options
+   * @returns the transaction specified by `txHash`
+   */
+  public static async fromEthersProvider(
+    provider: string | JsonRpcProvider,
+    txHash: string,
+    txOptions?: TxOptions
+  ) {
+    const prov = typeof provider === 'string' ? new JsonRpcProvider(provider) : provider
+    const txData = await prov.send('eth_getTransactionByHash', [txHash])
+    const normedTx = normalizeTxParams(txData)
+    return TransactionFactory.fromTxData(normedTx, txOptions)
   }
 }
